@@ -1,1 +1,34 @@
-*
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local database files (keep production data out of Git)
+*.db
+*.sqlite
+*.sqlite3
+*-wal
+*-shm
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
