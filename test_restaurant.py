@@ -5,6 +5,13 @@ from restaurant import RestaurantManagementSystem, MenuItem
 from app import app
 
 
+def authenticated_client():
+    client = app.test_client()
+    response = client.post('/api/login', json={'username': 'admin', 'password': 'admin123'})
+    assert response.status_code == 200
+    return client
+
+
 def test_web_app_serves_login_page():
     client = app.test_client()
 
