@@ -11,7 +11,7 @@ from urllib.request import urlopen
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Database file location for the restaurant application.
-DB_PATH = os.path.join(os.path.dirname(__file__), "restaurant.db")
+DB_PATH = os.environ.get("DB_PATH") or (os.path.join("/tmp", "restaurant.db") if os.environ.get("VERCEL") else os.path.join(os.path.dirname(__file__), "restaurant.db"))
 
 
 # Adapt MySQL results to the row behavior used by the SQLite queries below.
@@ -306,21 +306,21 @@ def init_db():
     }
 
     default_menu = [
-        ("Burger", "Main Course", 199.0, 10, real_photo_data_uri(photo_urls["Burger"], label="Burger", accent="#ff7b54", background="#fff7ed")),
-        ("Fries", "Sides", 99.0, 20, real_photo_data_uri(photo_urls["Fries"], label="Fries", accent="#f59e0b", background="#fef3c7")),
-        ("Tea", "Beverages", 59.0, 15, real_photo_data_uri(photo_urls["Tea"], label="Tea", accent="#7c3aed", background="#f5f3ff")),
-        ("Pasta", "Main Course", 249.0, 8, real_photo_data_uri(photo_urls["Pasta"], label="Pasta", accent="#f97316", background="#ffedd5")),
-        ("Salad", "Appetizer", 149.0, 14, real_photo_data_uri(photo_urls["Salad"], label="Salad", accent="#10b981", background="#ecfdf5")),
-        ("Cake", "Dessert", 129.0, 9, real_photo_data_uri(photo_urls["Cake"], label="Cake", accent="#ec4899", background="#fdf2f8")),
-        ("Chapati", "Main Course", 65.0, 24, real_photo_data_uri(photo_urls["Chapati"], label="Chapati", accent=dish_palette("Chapati")[0], background=dish_palette("Chapati")[1])),
-        ("Paratha", "Main Course", 79.0, 22, real_photo_data_uri(photo_urls["Paratha"], label="Paratha", accent=dish_palette("Paratha")[0], background=dish_palette("Paratha")[1])),
-        ("Dal", "Main Course", 129.0, 18, real_photo_data_uri(photo_urls["Dal"], label="Dal", accent=dish_palette("Dal")[0], background=dish_palette("Dal")[1])),
-        ("Chawal", "Main Course", 119.0, 20, real_photo_data_uri(photo_urls["Chawal"], label="Chawal", accent=dish_palette("Chawal")[0], background=dish_palette("Chawal")[1])),
-        ("Dal Chawal", "Main Course", 179.0, 16, real_photo_data_uri(photo_urls["Dal Chawal"], label="Dal Chawal", accent=dish_palette("Dal Chawal")[0], background=dish_palette("Dal Chawal")[1])),
-        ("Buttermilk", "Beverages", 69.0, 20, real_photo_data_uri(photo_urls["Buttermilk"], label="Buttermilk", accent=dish_palette("Buttermilk")[0], background=dish_palette("Buttermilk")[1])),
-        ("Mango Shake", "Beverages", 109.0, 18, real_photo_data_uri(photo_urls["Mango Shake"], label="Mango Shake", accent="#f59e0b", background="#fef3c7")),
-        ("Lassi", "Beverages", 89.0, 17, real_photo_data_uri(photo_urls["Lassi"], label="Lassi", accent="#a855f7", background="#f3e8ff")),
-        ("Nachos", "Appetizer", 169.0, 11, real_photo_data_uri(photo_urls["Nachos"], label="Nachos", accent="#fb7185", background="#fff1f2")),
+        ("Burger", "Main Course", 199.0, 10, photo_urls["Burger"]),
+        ("Fries", "Sides", 99.0, 20, photo_urls["Fries"]),
+        ("Tea", "Beverages", 59.0, 15, photo_urls["Tea"]),
+        ("Pasta", "Main Course", 249.0, 8, photo_urls["Pasta"]),
+        ("Salad", "Appetizer", 149.0, 14, photo_urls["Salad"]),
+        ("Cake", "Dessert", 129.0, 9, photo_urls["Cake"]),
+        ("Chapati", "Main Course", 65.0, 24, photo_urls["Chapati"]),
+        ("Paratha", "Main Course", 79.0, 22, photo_urls["Paratha"]),
+        ("Dal", "Main Course", 129.0, 18, photo_urls["Dal"]),
+        ("Chawal", "Main Course", 119.0, 20, photo_urls["Chawal"]),
+        ("Dal Chawal", "Main Course", 179.0, 16, photo_urls["Dal Chawal"]),
+        ("Buttermilk", "Beverages", 69.0, 20, photo_urls["Buttermilk"]),
+        ("Mango Shake", "Beverages", 109.0, 18, photo_urls["Mango Shake"]),
+        ("Lassi", "Beverages", 89.0, 17, photo_urls["Lassi"]),
+        ("Nachos", "Appetizer", 169.0, 11, photo_urls["Nachos"]),
     ]
 
     valid_names = tuple(name.lower() for name, _, _, _, _ in default_menu)
