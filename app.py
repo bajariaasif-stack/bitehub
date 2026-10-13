@@ -25,7 +25,27 @@ from database import (
 
 # Create the main Flask application and initialize the database when the app starts.
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "restaurant-management-secret")
+# Use a random environment-provided key in production; fallback is local development only.
+_secret_key = os.environ.get("SECRET_KEY")
+if os.environ.get("FLASK_ENV", "").lower() == "production" and not _secret_key:
+    raise RuntimeError("SECRET_KEY must be set when FLASK_ENV=production")
+app.secret_key = _secret_key or "local-development-only-change-me"
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.environ.get("COOKIE_SECURE", "").lower() in {"1", "true", "yes"},
+)
+
+
+@app.before_request
+def require_api_login():
+    """Keep restaurant records and mutations private to authenticated staff."""
+    if request.path.startswith("/api/") and request.endpoint != "login_api":
+        if not session.get("user_id"):
+            return jsonify({"error": "Authentication required. Please log in."}), 401
+    if request.endpoint == "register_api" and session.get("role") != "admin":
+        return jsonify({"error": "Administrator access required."}), 403
+
 
 # Ensure the database tables exist before serving requests.
 init_db()
