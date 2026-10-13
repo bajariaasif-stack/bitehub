@@ -129,7 +129,7 @@ def test_invalid_menu_and_order_inputs_are_rejected():
 
 
 def test_menu_item_can_be_updated_via_api():
-    client = app.test_client()
+    client = authenticated_client()
 
     create_response = client.post(
         '/api/menu',
@@ -163,7 +163,7 @@ def test_menu_item_can_be_updated_via_api():
 
 
 def test_bulk_menu_updates_and_photo_updates_via_api():
-    client = app.test_client()
+    client = authenticated_client()
 
     menu_response = client.get('/api/menu')
     assert menu_response.status_code == 200
@@ -257,3 +257,17 @@ def test_customer_and_payment_flow():
     assert total == 497.0
     assert any(row["customer_name"] == "Alice Johnson" for row in get_customers())
     assert any(row["payment_method"] == "Card" and row["amount"] == 497.0 for row in get_payments())
+
+
+def test_api_rejects_unauthenticated_requests():
+    client = app.test_client()
+    response = client.get('/api/menu')
+    assert response.status_code == 401
+
+
+def test_registration_requires_admin():
+    client = app.test_client()
+    response = client.post('/api/register', json={
+        'username': 'should-not-register', 'password': 'test-password', 'role': 'staff'
+    })
+    assert response.status_code == 401
