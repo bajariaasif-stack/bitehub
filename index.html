@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BiteHub | Restaurant Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Brand, section navigation, and quick service status. -->
+      <aside class="sidebar">
+        <div class="brand-wrap">
+          <div class="brand-mark" aria-label="BiteHub logo">
+            <span class="brand-icon">B</span>
+          </div>
+          <div>
+            <p class="eyebrow">Restaurant</p>
+            <h1>BiteHub</h1>
+          </div>
+        </div>
+
+        <nav class="side-nav">
+          <button class="nav-item active" data-section="overview">
+            <span>Overview</span>
+          </button>
+          <button class="nav-item" data-section="menu">
+            <span>Menu</span>
+          </button>
+          <button class="nav-item" data-section="orders">
+            <span>Orders</span>
+          </button>
+          <button class="nav-item" data-section="reservations">
+            <span>Reservations</span>
+          </button>
+          <button class="nav-item" data-section="staff">
+            <span>Staff</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-card">
+          <p class="eyebrow">Today</p>
+          <h3 id="sidebarStatus">Service running</h3>
+          <div class="mini-stats">
+            <span><strong id="openTables">12</strong> Open</span>
+            <span><strong id="staffOnDuty">8</strong> Staff</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <!-- Shared page title and session controls. -->
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Management dashboard</p>
+            <h2>Restaurant operations</h2>
+          </div>
+          <div class="topbar-actions">
+            <button id="logoutButton" class="ghost-button" type="button">Logout</button>
+          </div>
+        </header>
+
+        <!-- Sales metrics and dashboard summaries. -->
+        <section id="overview" class="panel-section active-panel">
+          <div class="stats-grid">
+            <article class="stat-card accent-amber">
+              <div>
+                <p>Today's sales</p>
+                <h3 id="salesValue">$0.00</h3>
+              </div>
+              <span class="trend positive">+12.5%</span>
+            </article>
+            <article class="stat-card accent-green">
+              <div>
+                <p>Orders</p>
+                <h3 id="orderCount">0</h3>
+              </div>
+              <span class="trend positive">+8.2%</span>
+            </article>
+            <article class="stat-card accent-blue">
+              <div>
+                <p>Guests served</p>
+                <h3 id="guestCount">0</h3>
+              </div>
+              <span class="trend positive">+5.1%</span>
+            </article>
+            <article class="stat-card accent-pink">
+              <div>
+                <p>Inventory alerts</p>
+                <h3 id="alertCount">0</h3>
+              </div>
+              <span class="trend warning">Needs review</span>
+            </article>
+          </div>
+
+          <div class="content-grid dashboard-grid">
+            <div class="card wide-card">
+              <div class="card-header">
+                <h3>Popular items</h3>
+                <button class="text-button">View menu</button>
+              </div>
+              <div id="popularItems" class="bar-list"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Recent orders</h3>
+                <button class="text-button">Live</button>
+              </div>
+              <div id="recentOrders" class="order-feed"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Menu catalog, search, and item editing controls. -->
+        <section id="menu" class="panel-section">
+          <div class="content-grid menu-grid">
+            <div class="card menu-card">
+              <div class="card-header">
+                <h3>Menu catalog</h3>
+                <div class="filter-pills" id="categoryFilters"></div>
+              </div>
+              <div id="menuList" class="menu-list"></div>
+            </div>
+
+            <div class="card add-item-card">
+              <div class="card-header">
+                <h3>Search menu</h3>
+              </div>
+              <div class="search-wrap">
+                <input type="search" id="menuSearch" placeholder="Search dishes, meals, or categories" />
+              </div>
+
+              <div class="card-header" style="margin-top: 20px;">
+                <h3>Selected item settings</h3>
+              </div>
+              <p style="margin: 8px 0 16px; color: #8a7a6d; font-size: 0.82rem;">Only the selected menu item will be updated. Choose a dish from the list first.</p>
+              <form id="menuEditForm" class="form-grid compact-form" style="margin-top: 14px;">
+                <label>
+                  Menu item
+                  <select id="menuEditSelect"></select>
+                </label>
+                <label>
+                  Name
+                  <input type="text" id="menuEditName" placeholder="Dish name" />
+                </label>
+                <label>
+                  Category
+                  <input type="text" id="menuEditCategory" placeholder="Main Course" />
+                </label>
+                <label>
+                  Price
+                  <input type="number" id="menuEditPrice" min="0" step="0.01" placeholder="199" />
+                </label>
+                <label>
+                  Stock
+                  <input type="number" id="menuEditStock" min="0" step="1" placeholder="10" />
+                </label>
+                <label>
+                  Image URL
+                  <input type="url" id="menuEditImageUrl" placeholder="https://images.unsplash.com/..." />
+                </label>
+                <label>
+                  Upload local photo
+                  <input type="file" id="menuImageUpload" accept="image/*" />
+                </label>
+                <button type="submit" class="primary-button full-width">Save selected item</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Current cart, customer/payment details, and checkout. -->
+        <section id="orders" class="panel-section">
+          <div class="content-grid order-grid">
+            <div class="card order-card">
+              <div class="card-header">
+                <h3>Current order</h3>
+                <span class="badge" id="tableLabel">Table 1</span>
+              </div>
+              <div class="customer-payment-grid">
+                <label>
+                  Customer name
+                  <input type="text" id="customerName" placeholder="John Smith" />
+                </label>
+                <label>
+                  Phone
+                  <input type="tel" id="customerPhone" placeholder="9876543210" />
+                </label>
+                <label>
+                  Email
+                  <input type="email" id="customerEmail" placeholder="john@example.com" />
+                </label>
+                <label>
+                  Address
+                  <input type="text" id="customerAddress" placeholder="House 12, Downtown" />
+                </label>
+                <label>
+                  Payment method
+                  <select id="paymentMethod">
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Wallet">Wallet</option>
+                  </select>
+                </label>
+                <label>
+                  Payment status
+                  <select id="paymentStatus">
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="partial">Partial</option>
+                  </select>
+                </label>
+              </div>
+              <div id="orderItems" class="order-items"></div>
+              <div class="totals-box">
+                <div><span>Subtotal</span><strong id="subtotalValue">$0.00</strong></div>
+                <div><span>Service</span><strong id="serviceValue">$0.00</strong></div>
+                <div class="grand-total"><span>Total</span><strong id="totalValue">$0.00</strong></div>
+              </div>
+              <div class="order-actions">
+                <select id="tableSelect">
+                  <option value="Table 1">Table 1</option>
+                  <option value="Table 2">Table 2</option>
+                  <option value="Table 3">Table 3</option>
+                  <option value="Table 4">Table 4</option>
+                  <option value="Takeaway">Takeaway</option>
+                </select>
+                <button id="placeOrderBtn" class="primary-button">Place order</button>
+              </div>
+            </div>
+
+            <div class="card summary-card">
+              <div class="card-header">
+                <h3>Kitchen status</h3>
+              </div>
+              <div id="kitchenStatus" class="status-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reservation entry form and saved booking list. -->
+        <section id="reservations" class="panel-section">
+          <div class="content-grid reservation-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>Reservations</h3>
+              </div>
+              <form id="reservationForm" class="form-grid compact-form">
+                <label>
+                  Guest name
+                  <input type="text" id="guestName" placeholder="Alex Johnson" required />
+                </label>
+                <label>
+                  Date
+                  <input type="date" id="reservationDate" required />
+                </label>
+                <label>
+                  Time
+                  <input type="time" id="reservationTime" required />
+                </label>
+                <label>
+                  Guests
+                  <input type="number" id="reservationGuests" min="1" max="20" value="2" required />
+                </label>
+                <button type="submit" class="primary-button full-width">Save reservation</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Booking list</h3>
+              </div>
+              <div id="reservationList" class="reservation-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Staff performance and shift summary panels. -->
+        <section id="staff" class="panel-section">
+          <div class="content-grid staff-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>Staff performance</h3>
+              </div>
+              <div id="staffList" class="staff-list"></div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>Shift summary</h3>
+              </div>
+              <div class="shift-summary">
+                <div>
+                  <span>Open tables</span>
+                  <strong>12</strong>
+                </div>
+                <div>
+                  <span>Ready for checkout</span>
+                  <strong>4</strong>
+                </div>
+                <div>
+                  <span>Next task</span>
+                  <strong>Restock soda</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
